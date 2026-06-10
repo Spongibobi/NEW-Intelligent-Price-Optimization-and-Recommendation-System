@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+
+{% block content %}
+ <h1>Intelligent Price Optimization System</h1>
+
+    <div class="tabs">
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('comparison') }}">Comparison</a>
+        <a class="active" href="{{ url_for('recommend') }}">Recommendation</a>
+        <a href="{{ url_for('sales') }}">Sales</a>
+        {% if session.get("role") == "admin" %}
+        <a href="{{ url_for('admin') }}">Admin</a>
+        {% endif %}
+    </div>
+<div class="recommend-box">
+
+    <h1>Product Recommendation</h1>
+
+    <form method="POST" class="recommend-form">
+
+        <div class="input-group">
+            <label>Age</label>
+            <input type="number" name="age" required>
+        </div>
+
+        <div class="input-group">
+            <label>Job</label>
+            <input type="text" name="job" placeholder="Engineer, Student..." required>
+        </div>
+
+        <div class="input-group">
+            <label>Budget</label>
+
+            <select name="budget">
+                <option value="low">Low Budget</option>
+                <option value="mid">Mid Range</option>
+                <option value="high">High End</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Quality Importance</label>
+
+            <select name="quality">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Warranty Importance</label>
+
+            <select name="warranty">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Usage Type</label>
+
+            <select name="usage">
+                <option value="daily">Daily Use</option>
+                <option value="office">Office</option>
+                <option value="gaming">Gaming</option>
+                <option value="professional">Professional</option>
+                <option value="luxury">Luxury</option>
+            </select>
+        </div>
+
+        <button type="submit">
+            Get Recommendation
+        </button>
+
+    </form>
+
+    {% if recommendation %}
+
+    <div class="recommend-result">
+
+        <h2>{{ recommendation.product_name }}</h2>
+
+        <p><strong>Brand:</strong> {{ recommendation.brand }}</p>
+
+        <p><strong>Price:</strong> OMR {{ recommendation.price }}</p>
+
+        <p><strong>Website:</strong> {{ recommendation.website }}</p>
+
+        <div class="reason-box">
+            {{ recommendation.ai_reason }}
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Products List</h2>
+
+<table border="1">
+<tr>
+<th>Name</th>
+<th>Brand</th>
+<th>Price</th>
+<th>Quality</th>
+<th>Warranty</th>
+</tr>
+
+{% for p in items %}
+<tr>
+<td>{{p[1]}}</td>
+<td>{{p[2]}}</td>
+<td>{{p[3]}}</td>
+<td>{{p[4]}}</td>
+<td>{{p[5]}}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+<a href="/dashboard">Back</a>
+
+</body>
+</html>
+

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="navbar">
+Intelligent Price Optimization System
+</div>
+
+<div class="container">
+
+<!-- HOME -->
+<div class="card">
+<h3>Home</h3>
+
+<input placeholder="Search product">
+
+<button onclick="location.href='/products'">
+Compare Prices
+</button>
+
+</div>
+
+<!-- COMPARISON -->
+<div class="card">
+<h3>Product Comparison</h3>
+
+<table>
+<tr>
+<th>Brand</th>
+<th>Price</th>
+<th>Warranty</th>
+<th>Rating</th>
+</tr>
+
+{% for item in items %}
+<tr>
+<td>{{item[2]}}</td>
+<td>{{item[3]}}</td>
+<td>{{item[5]}}</td>
+<td>{{item[4]}}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+<button onclick="location.href='/recommend'">
+Get Recommendation
+</button>
+
+</div>
+
+<!-- RECOMMENDATION -->
+<div class="card">
+<h3>Product Recommendation</h3>
+
+<form method="POST" action="/recommend">
+
+<input name="name" placeholder="Name">
+<input name="age" placeholder="Age">
+<input name="job" placeholder="Job">
+
+<button type="submit">
+Get Best Product
+</button>
+
+</form>
+
+</div>
+
+<!-- GRAPH PLACE -->
+<div class="card">
+<h3>Sales by Brand</h3>
+
+<p style="text-align:center;">
+(Graph will appear here later)
+</p>
+
+</div>
+
+</div>
+
+</body>
+</html>
+

@@ -1,0 +1,18 @@
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('comparison') }}">Comparison</a>
+        <a href="{{ url_for('recommend') }}">Recommendation</a>
+        <a href="{{ url_for('sales') }}">Sales</a>
+        {% if session.get("username") == "admin" %}
+            <a href="{{ url_for('add_product') }}">Add Product</a>
+        {% endif %}
+    </div>
+
+    <div class="nav-title">Intelligent Price Optimizer</div>
+
+    <div class="nav-right">
+        <span>{{ session.get("username") }}</span>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>

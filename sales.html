@@ -1,0 +1,134 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<section class="dashboard">
+    <h1>Intelligent Price Optimization System</h1>
+
+    <div class="tabs">
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('comparison') }}">Comparison</a>
+        <a href="{{ url_for('recommend') }}">Recommendation</a>
+        <a class="active" href="{{ url_for('sales') }}">Sales</a>
+        {% if session.get("role") == "admin" %}
+        <a href="{{ url_for('admin') }}">Admin</a>
+        {% endif %}
+    </div>
+
+    <!-- Sales by Brand Section - Everyone sees this -->
+    <div class="card wide-card">
+        <h2> Sales by Brand</h2>
+
+        {% if brand_sales and brand_sales|length > 0 %}
+            {% set max_sales = brand_sales[0]['total_sales'] %}
+            
+            {% for item in brand_sales %}
+            <div class="bar-row">
+                <span>{{ item['brand'] }}</span>
+                <div class="bar-background">
+                    <div class="bar" style="width: {{ (item['total_sales'] / max_sales * 100) | round }}%;"></div>
+                </div>
+                <b>{{ item['total_sales'] }}</b>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No sales data yet. Search for a product first.</p>
+        {% endif %}
+    </div>
+
+    <!-- Search Popularity Section - Everyone sees this -->
+    <div class="card wide-card">
+        <h2>🔍 Search Popularity Tracking</h2>
+        <p>Real-time search trends from user activity</p>
+
+        {% if search_trends and search_trends|length > 0 %}
+            {% set max_searches = search_trends[0]['total'] %}
+            
+            {% for item in search_trends %}
+            <div class="bar-row">
+                <span>{{ item['search_text'] }}</span>
+                <div class="bar-background">
+                    <div class="bar search-bar" style="width: {{ (item['total'] / max_searches * 100) | round }}%;"></div>
+                </div>
+                <b>{{ item['total'] }} searches</b>
+                <small class="user-count">({{ item['unique_users'] }} users)</small>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No search data yet. Users need to search for products.</p>
+        {% endif %}
+    </div>
+
+    <!-- SELLER ONLY SECTIONS -->
+    {% if session.role in ['seller', 'admin'] %}
+    
+    <!-- Recent Activity Section -->
+    <div class="card wide-card">
+        <h2> Recent User Searches</h2>
+        
+        
+        {% if recent_searches and recent_searches|length > 0 %}
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Search Term</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in recent_searches %}
+                <tr>
+                    <td>{{ item['username'] }}</td>
+                    <td><strong>{{ item['search_text'] }}</strong></td>
+                    <td>{{ item['searched_at'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>No recent searches.</p>
+        {% endif %}
+    </div>
+
+    <!-- Search vs Sales Correlation -->
+    <div class="card wide-card">
+        <h2> Search vs Sales Correlation</h2>
+        
+        
+        {% if correlation_data and correlation_data|length > 0 %}
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Product Category</th>
+                    <th>Searches</th>
+                    <th>Sales</th>
+                    <th>Conversion Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in correlation_data %}
+                <tr>
+                    <td><strong>{{ item['search_name'] }}</strong></td>
+                    <td>{{ item['searches'] }}</td>
+                    <td>{{ item['sales'] }}</td>
+                    <td>
+                        {% if item['searches'] > 0 %}
+                            <span class="conversion-rate">
+                                {{ ((item['sales'] / item['searches']) * 100) | round }}%
+                            </span>
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>Not enough data for correlation analysis.</p>
+        {% endif %}
+    </div>
+    
+    {% endif %}
+</section>
+{% endblock %}

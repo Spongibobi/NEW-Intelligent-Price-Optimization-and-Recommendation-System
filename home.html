@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<section class="dashboard">
+    <h1>Intelligent Price Optimization System</h1>
+
+    <div class="tabs">
+        <a href="{{ url_for('home') }}" class="active">Home</a>
+        <a href="{{ url_for('comparison') }}">Comparison</a>
+        <a href="{{ url_for('recommend') }}">Recommendation</a>
+        <a href="{{ url_for('sales') }}">Sales</a>
+        {% if session.get("role") == "admin" %}
+        <a href="{{ url_for('admin') }}">Admin</a>
+        {% endif %}
+    </div>
+
+    <form action="{{ url_for('home') }}" method="POST" class="card search-card">
+        <input type="text"
+               name="search"
+               placeholder="Search product..."
+               value="{{ search_text }}"
+               required>
+        
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Popular Categories Section -->
+    <div class="popular-categories">
+        <h3>🔥 Popular Categories</h3>
+        <div class="categories-grid">
+            <!-- Laptop -->
+            <div class="category-item" onclick="searchCategory('laptop')">
+                <div class="category-icon">💻</div>
+                <div class="category-name">Laptop</div>
+            </div>
+            
+            <!-- Phone -->
+            <div class="category-item" onclick="searchCategory('phone')">
+                <div class="category-icon">📱</div>
+                <div class="category-name">Phone</div>
+            </div>
+            
+            <!-- Camera -->
+            <div class="category-item" onclick="searchCategory('camera')">
+                <div class="category-icon">📷</div>
+                <div class="category-name">Camera</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="logout-container" style="position: fixed; bottom: 20px; right: 20px;">
+        <a href="{{ url_for('logout') }}" class="logout-link" style="background: #1f6fb2; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold;">Logout</a>
+    </div>
+</section>
+
+
+<script>
+    function searchCategory(category) {
+        // Create a form and submit
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{{ url_for('home') }}";
+        
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'search';
+        input.value = category;
+        
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+
+{% endblock %}

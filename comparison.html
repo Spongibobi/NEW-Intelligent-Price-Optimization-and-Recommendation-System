@@ -1,0 +1,160 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<section class="dashboard">
+
+    <h1>Intelligent Price Optimization System</h1>
+
+    <div class="tabs">
+        <a href="{{ url_for('home') }}">Home</a>
+        <a class="active" href="{{ url_for('comparison') }}">Comparison</a>
+        <a href="{{ url_for('recommend') }}">Recommendation</a>
+        <a href="{{ url_for('sales') }}">Sales</a>
+        {% if session.get("role") == "admin" %}
+        <a href="{{ url_for('admin') }}">Admin</a>
+        {% endif %}
+    </div>
+
+    <div class="card wide-card">
+
+        <h2>
+            Comparison{% if search_text %} for "{{ search_text }}"{% endif %}
+        </h2>
+
+        {% if notifications %}
+        <div class="notification-box">
+
+            <h3>Latest Offers</h3>
+
+            {% for note in notifications %}
+                <p>{{ note }}</p>
+            {% endfor %}
+
+        </div>
+        {% endif %}
+
+        {% if products %}
+
+        <!-- TABLE SECTION -->
+        <table class="comparison-table">
+
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Brand</th>
+                    <th>Price</th>
+                    <th>Warranty</th>
+                    <th>Rating</th>
+                    <th>Offer</th>
+                    <th>Website</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for product in products %}
+
+                <tr>
+
+                    <td>{{ product["product_name"] }}</td>
+
+                    <td>{{ product["brand"] }}</td>
+
+                    <td>
+                        OMR {{ "%.2f"|format(product["price"]) }}
+                    </td>
+
+                    <td>{{ product["warranty"] }}</td>
+
+                    <td>{{ product["rating"] }}/5</td>
+
+                    <td>
+                        {% if product["discount"] and product["discount"] > 0 %}
+                            🔥 {{ product["discount"] }}% OFF
+                            <br>
+                            {{ product["offer"] }}
+                        {% else %}
+                            No Offer
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if product["product_url"] %}
+                        <a href="{{ product['product_url'] }}" target="_blank">
+                            {{ product["website"] }}
+                        </a>
+                        {% else %}
+                            {{ product["website"] }}
+                        {% endif %}
+                        <br><br>
+                        <a href="https://www.google.com/search?tbm=isch&q={{ product['product_name'] }}" target="_blank">
+                            View Images
+                        </a>
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <!-- PRODUCT GALLERY SECTION (UNDER THE TABLE) -->
+        <h2>Product Gallery</h2>
+
+        <div class="product-gallery">
+            {% for product in products %}
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="{{ product['image_url'] if product['image_url'] and product['image_url'] != '#' else 'https://via.placeholder.com/250x180?text=No+Image' }}" 
+                         alt="{{ product['product_name'] }}"
+                         onerror="this.src='https://via.placeholder.com/250x180?text=Image+Not+Available'">
+                </div>
+                
+                <div class="product-info">
+                    <h4 class="product-title">{{ product["product_name"] }}</h4>
+                    <p class="product-brand">{{ product["brand"] }}</p>
+                    
+                    <div class="product-details">
+                        <span class="product-price">OMR {{ "%.2f"|format(product["price"]) }}</span>
+                        <span class="product-warranty">🛡️ {{ product["warranty"] }}</span>
+                        <span class="product-rating">⭐ {{ product["rating"] }}/5</span>
+                    </div>
+                    
+                    {% if product["discount"] and product["discount"] > 0 %}
+                    <div class="offer-badge">
+                        🔥 {{ product["discount"] }}% OFF - {{ product["offer"] }}
+                    </div>
+                    {% endif %}
+                    
+                    <a href="{{ product['product_url'] if product['product_url'] else '#' }}" 
+                       target="_blank" 
+                       class="buy-button">
+                        🛒 Buy It
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <a class="button-link" href="{{ url_for('recommend') }}">
+            Get Recommendation
+        </a>
+
+        {% else %}
+
+        <p>No products yet. Search first from the Home page.</p>
+
+        <a class="button-link" href="{{ url_for('home') }}">
+            Go to Search
+        </a>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

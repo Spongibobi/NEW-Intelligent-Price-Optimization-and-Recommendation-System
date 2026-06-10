@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Recommended Product</h2>
+
+{% if product %}
+<p>Name: {{product[1]}}</p>
+<p>Brand: {{product[2]}}</p>
+<p>Price: {{product[3]}}</p>
+<p>Quality: {{product[4]}}</p>
+<p>Warranty: {{product[5]}}</p>
+{% else %}
+<p>No recommendation found</p>
+{% endif %}
+
+<a href="/dashboard">Back</a>
+
+</body>
+</html>

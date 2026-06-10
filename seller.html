@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<section class="dashboard">
+    <h1>Seller Dashboard</h1>
+    <p>Welcome, {{ session.username }}!</p>
+
+    <div class="tabs">
+        <a class="active" href="{{ url_for('seller') }}">Seller Dashboard</a>
+        <a href="{{ url_for('predict') }}">Demand Prediction</a>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div style="display: flex; gap: 20px; margin-bottom: 30px;">
+        <div class="card" style="flex: 1; text-align: center; background: linear-gradient(135deg, #e2e0eb 0%, #764ba2 100%); color: white;">
+            <h3>Total Searches</h3>
+            <p style="font-size: 32px;">{{ total_searches }}</p>
+        </div>
+        <div class="card" style="flex: 1; text-align: center; background: linear-gradient(135deg, #f5eef5 0%, #f5576c 100%); color: white;">
+            <h3>Today's Searches</h3>
+            <p style="font-size: 32px;">{{ today_searches }}</p>
+        </div>
+    </div>
+        <!-- Sales by Brand Section - Everyone can see this -->
+    <div class="card wide-card">
+        <h2> Sales by Brand</h2>
+
+        {% if brand_sales %}
+            {% set max_sales = brand_sales | map(attribute="total_sales") | max %}
+
+            {% for item in brand_sales %}
+            <div class="bar-row">
+                <span>{{ item["brand"] }}</span>
+                <div class="bar-background">
+                    <div class="bar" style="width: {{ (item['total_sales'] / max_sales * 100) | round }}%;"></div>
+                </div>
+                <b>{{ item["total_sales"] }}</b>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No sales data yet. Search for a product first.</p>
+        {% endif %}
+    </div>
+
+    <!-- Trending Searches -->
+    <div class="card wide-card">
+        <h2>📈 Trending Searches</h2>
+        
+        {% if top_searches and top_searches|length > 0 %}
+            {% for item in top_searches %}
+            <div class="bar-row">
+                <span>{{ item['search_text'] }}</span>
+                <div class="bar-background">
+                    <div class="bar search-bar" style="width: {{ (item['total'] / top_searches[0]['total'] * 100) | round }}%;"></div>
+                </div>
+                <b>{{ item['total'] }} searches</b>
+                <small>({{ item['unique_users'] }} users)</small>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No search data yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- Recent User Searches -->
+    <div class="card wide-card">
+        <h2>🕒 Recent User Searches</h2>
+        
+        {% if recent_searches and recent_searches|length > 0 %}
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Search Term</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in recent_searches[:10] %}
+                <tr>
+                    <td>{{ item['username'] }}</td>
+                    <td><strong>{{ item['search_text'] }}</strong></td>
+                    <td>{{ item['searched_at'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>No recent searches.</p>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

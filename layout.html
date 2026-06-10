@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Intelligent Price Optimizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <ul>
+            {% if session.username %}
+                <!-- Show Home link only for regular users (not sellers) -->
+                {% if session.role != 'seller' %}
+               
+                {% endif %}
+                
+              
+                
+               
+                
+               
+                
+               
+                
+                <!-- User info with role badge -->
+                <li class="user-info">
+                    <span>👤 {{ session.username }}</span>
+                    <span class="role-badge">{{ session.role }}</span>
+                </li>
+            {% else %}
+                
+            {% endif %}
+        </ul>
+    </nav>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}
+        {% endblock %}
+    </main>
+    <div class="logout-container" style="position: fixed; bottom: 20px; right: 20px;">
+        <a href="{{ url_for('logout') }}" class="logout-link" style="background: #1f6fb2; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold;">Logout</a>
+    </div>
+</body>
+</html>
